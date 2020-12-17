@@ -38,4 +38,19 @@ class A extends Controller
 
         return \Excel::download(new \App\Exports\Susulan, 'susulan.xlsx');
     }
+
+    public function semua()
+    {
+        $nilai = \App\Models\Grade::where('timecreated', '!=', null)->get();
+
+        $jadi = [];
+        $nilai->each(function($data) use (&$jadi){
+            $jadi[$data->siswa->username]["NISN"] = $data->siswa->username;    
+            $jadi[$data->siswa->username]["Nama"] = $data->siswa->firstname;    
+            $jadi[$data->siswa->username]["Kelas"] = $data->siswa->lastname;    
+            $jadi[$data->siswa->username]["Nilai"][] = [
+                $data->pelajaran->itemname, $data->finalgrade
+            ];
+        });
+    }
 }
